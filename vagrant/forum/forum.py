@@ -40,7 +40,7 @@ HTML_WRAP = '''\
 
 # HTML template for an individual comment
 POST = '''\
-    <div class=post><em class=date>%s</em><br>%s</div>
+    <div class=post><em class=date>%(time)s</em><br>%(content)s</div>
 '''
 
 ## Request handler for main page
@@ -104,4 +104,3 @@ def Dispatcher(env, resp):
 httpd = make_server('', 8000, Dispatcher)
 print ("Serving HTTP on port 8000...")
 httpd.serve_forever()
-
