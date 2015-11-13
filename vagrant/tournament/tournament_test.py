@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Test cases for tournament.py
+# Switched order of standings matches now after name
 
 from tournament import *
 
@@ -78,7 +79,7 @@ def testStandingsBeforeMatches():
         raise ValueError("Only registered players should appear in standings.")
     if len(standings[0]) != 4:
         raise ValueError("Each playerStandings row should have four columns.")
-    [(id1, name1, wins1, matches1), (id2, name2, wins2, matches2)] = standings
+    [(id1, name1, matches1, wins1), (id2, name2, matches2, wins2)] = standings
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
             "Newly registered players should have no matches or wins.")
@@ -91,6 +92,7 @@ def testStandingsBeforeMatches():
 def testReportMatches():
     deleteMatches()
     deletePlayers()
+    deleteTournaments()
     registerPlayer("Bruno Walton")
     registerPlayer("Boots O'Neal")
     registerPlayer("Cathy Burton")
@@ -100,14 +102,14 @@ def testReportMatches():
     reportMatch(id1, id2)
     reportMatch(id3, id4)
     standings = playerStandings()
-    for (i, n, w, m) in standings:
+    for (i, n, m, w) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
         if i in (id1, id3) and w != 1:
             raise ValueError("Each match winner should have one win recorded.")
         elif i in (id2, id4) and w != 0:
             raise ValueError("Each match loser should have zero wins recorded.")
-    print ("7. After a match, players have updated standings.")
+    print ("8. After a match, players have updated standings.")
 
 
 def testPairings():
@@ -142,8 +144,8 @@ if __name__ == '__main__':
     testRegister()
     testRegisterCountDelete()
     testStandingsBeforeMatches()
-##    testReportMatches()
-##    testPairings()
+    testReportMatches()
+    testPairings()
     print ("Success!  All tests pass!")
 
 

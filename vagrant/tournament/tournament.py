@@ -112,16 +112,7 @@ def registerPlayer(player, tourney="free agent"):
             query = "INSERT INTO Tourneys (name) VALUES (%s);"
             query_add = str(tourney)
             cursor.execute(query, [query_add])
-        query = "SELECT MAX(id) FROM Tourneys;"
-        cursor.execute(query)
-        tourney_id = cursor.fetchone()[0]
-        if tourney_id is None:
-            query = "INSERT INTO Tourneys (name) VALUES (%s);"
-            query_add = "Open Tournament"
-            cursor.execute(query, [query_add])
-            query = "SELECT MAX(id) FROM Tourneys;"
-            cursor.execute(query)
-            tourney_id = cursor.fetchone()[0]
+        tourney_id = getLatestTournament(cursor)
         query = ("INSERT INTO Contestants (tourney_id, player_id) "
                  "VALUES (%s, %s);")
         query_add = [tourney_id, player_id]
@@ -135,54 +126,150 @@ def registerPlayer(player, tourney="free agent"):
 
 
 
-def playerStandings(tourney=None):
-    """Returns a list of the players and their win records, sorted by wins.
+def playerStandings(player=None, detail=False):
+    """Returns a list of the players and their total records from all
+    tournaments, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    Will attempt to sort by highest wins (and then highest ties if detailed).
+
+    accepts two arguments (player, detail):
+        player: return only records of player with this id, returns all player
+                records if no id given
+    Args:
+        player: Player id returns only records of this player,
+                 returns all player records if no id given
+        detail: boolean, returns additional columns (loses, ties) if True
 
     Returns:
-      A list of tuples, each of which contains (id, name, wins, matches):
+      A list of tuples, each of which contains
+      (id, name, matches, wins, [loses, ties]):
         id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
-        wins: the number of matches the player has won
         matches: the number of matches the player has played
+        wins: the number of matches the player has won
+        loses: the number of matches the player has lost
+        ties: the number of matches the player has tied
     """
     tourney_db = connect()
     cursor = tourney_db.cursor()
-    if tourney is not None:
-        query = ("SELECT player_id, name, SUM(wins) as wins, SUM(matches) "
-                 "as matches FROM Standings WHERE tourney_id = %s "
-                 "GROUP BY player_id, name ORDER BY wins;")
-        query_add = tourney
+    if player is not None:
+        if detail:
+            query = ("SELECT player_id, name, SUM(matches), SUM(wins) as wins,"
+                     " SUM(loses), SUM(ties) as ties FROM Standings WHERE "
+                     "player_id = %s GROUP BY player_id, name "
+                     "ORDER BY wins, ties;")
+        else:
+            query = ("SELECT player_id, name, SUM(matches), SUM(wins) as wins,"
+                     " FROM Standings WHERE player_id = %s "
+                     "GROUP BY player_id, name ORDER BY wins;")
+        query_add = player
         cursor.execute(query, [query_add])
     else:
-        query = ("SELECT player_id, name, SUM(wins) as wins, SUM(matches) "
-                 "as matches FROM Standings GROUP BY player_id, name "
-                 "ORDER BY wins;")
+        if detail:
+            query = ("SELECT player_id, name, SUM(matches), SUM(wins) as wins,"
+                     " SUM(loses), SUM(ties) as ties FROM Standings "
+                     "GROUP BY player_id, name ORDER BY wins, ties;")
+        else:
+            query = ("SELECT player_id, name, SUM(matches), SUM(wins) as wins "
+                     "FROM Standings GROUP BY player_id, name ORDER BY wins;")
         cursor.execute(query)
     standings = cursor.fetchall()
     tourney_db.commit()
     tourney_db.close()
     return standings
 
-def reportMatch(winner, loser):
+def tournamentStandings(tourney=None, detail=False):
+    """Returns a list of player records for each tournament.
+
+    Will attempt to sort by tournament id then highest wins
+    (and then highest ties if detailed)
+
+    Args:
+        tourney: Tournament id returns only records of players registered
+                 in this tournament,
+                 returns all player records if no id given
+        detail: boolean, returns additional columns (loses, ties) if True
+
+    Returns:
+      A list of tuples, each of which contains
+      (tourney_id, tourney_name, id, name, matches, wins, [loses, ties]):
+        tourney_id: the tournament's unique id (assigned by the database)
+        tourney_name: the tournament's full name (as registered)
+        id: the player's unique id (assigned by the database)
+        name: the player's full name (as registered)
+        matches: the number of matches the player has played
+        wins: the number of matches the player has won
+        loses: the number of matches the player has lost
+        ties: the number of matches the player has tied
+    """
+    tourney_db = connect()
+    cursor = tourney_db.cursor()
+    if tourney is not None:
+        if detail:
+            query = ("SELECT * FROM Standings WHERE "
+                     "tourney_id = %s ORDER BY wins, ties;")
+        else:
+            query = ("SELECT tourney_id, tourney_name, player_id, name, "
+                     "matches, wins FROM Standings WHERE tourney_id = %s "
+                     "ORDER BY wins;")
+        query_add = tourney
+        cursor.execute(query, [query_add])
+    else:
+        if detail:
+            query = ("SELECT * FROM Standings "
+                     "ORDER BY tourney_id, wins, ties;")
+        else:
+            query = ("SELECT tourney_id, tourney_name, player_id, name, "
+                     "matches, wins FROM Standings "
+                     "ORDER BY tournament_id, wins;")
+        cursor.execute(query)
+    standings = cursor.fetchall()
+    tourney_db.commit()
+    tourney_db.close()
+    return standings
+
+def reportMatch(winner, loser, tourney=None, round_no=1, tied=False):
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
+      tourney: the id number of the tournament for this match,
+               records using latest id if none provided
+      round_no: the round number this match took place
+      tied: Boolean True records above args as ties instead
     """
     tourney_db = connect()
     cursor = tourney_db.cursor()
-    query = " %s;"
-    query_add = "" + player
+    if tourney is None:
+        tourney_id = getLatestTournament(cursor)
+    else:
+        tourney_id = tourney
+    if tied:
+        query = ("INSERT INTO Matches (tourney_id, round, id_tie_a, "
+                 "id_tie_b) VALUES (%s, %s, %s, %s);")
+    else:
+        query = ("INSERT INTO Matches (tourney_id, round, id_winner, "
+                 "id_loser) VALUES (%s, %s, %s, %s);")
+    query_add = [tourney_id, round_no, winner, loser]
     cursor.execute(query, query_add)
     tourney_db.commit()
     tourney_db.close()
 
+def getLatestTournament(cursor):
+    query = "SELECT MAX(id) FROM Tourneys;"
+    cursor.execute(query)
+    tourney_id = cursor.fetchone()[0]
+    if tourney_id is None:
+        query = "INSERT INTO Tourneys (name) VALUES (%s);"
+        query_add = "Open Tournament"
+        cursor.execute(query, [query_add])
+        query = "SELECT MAX(id) FROM Tourneys;"
+        cursor.execute(query)
+        tourney_id = cursor.fetchone()[0]
+    return tourney_id
 
-def swissPairings():
+def swissPairings(tourney=None):
     """Returns a list of pairs of players for the next round of a match.
 
     Assuming that there are an even number of players registered, each player
@@ -197,6 +284,9 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    # find tournament
+    # count # contestants
+
     tourney_db = connect()
     cursor = tourney_db.cursor()
     query = " %s;"
