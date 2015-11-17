@@ -115,6 +115,7 @@ def testReportMatches():
 def testPairings():
     deleteMatches()
     deletePlayers()
+    deleteTournaments()
     registerPlayer("Twilight Sparkle")
     registerPlayer("Fluttershy")
     registerPlayer("Applejack")
@@ -133,8 +134,51 @@ def testPairings():
     if correct_pairs != actual_pairs:
         raise ValueError(
             "After one match, players with one win should be paired.")
-    print ("8. After one match, players with one win are paired.")
+    print ("9. After one match, players with one win are paired.")
 
+
+def testSmallTournament():
+    deleteMatches()
+    deletePlayers()
+    deleteTournaments()
+    registerPlayer("Alpha", "Small Tournament")
+    tourney_id = getLatestTournament()
+    contestants = ["Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta",
+                   "Theta", "Iota", "Kappa", "Lambda", "Mu", "Nu", "Xi",
+                   "Omicron", "Pi"]
+    for name in contestants:
+        registerPlayer(name, tourney_id)
+    printTournamentStandings(tourney_id)
+    while True:
+        if not randomRound(tourney_id):
+            break
+
+
+
+def printTournamentStandings(tourney_id):
+    standings = tournamentStandings(tourney_id, False)
+    print ("\n~~ TOURNAMENT STANDINGS ~~")
+    for (i, n, m, w, t) in standings:
+        output = ("MATCHES: {0}   WINS: {1}   TIES: {2}   ID: {3}   "
+                  "NAME: {4}").format(m, w, t, i, n)
+        print (output)
+
+def randomRound(tourney_id):
+    pairings = swissPairings(tourney_id)
+    if pairings == [None]:
+        return False
+    else:
+        for pair in pairings:
+            [winner, loser] = randomWinner(pair[0], pair[2])
+            reportMatch(winner, loser, tourney_id, False)
+        printTournamentStandings(tourney_id)
+        return True
+
+def randomWinner(one, two):
+    if random() < 0.5:
+        return [one, two]
+    else:
+        return [two, one]
 
 if __name__ == '__main__':
     testDeleteMatches()
@@ -147,5 +191,14 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     print ("Success!  All tests pass!")
+    print ("Attempting randomly generated Small Tournament")
+    testSmallTournament()
+##    print ("Success!  Small Tournament concluded")
+##    print ("Attempting randomly generated Large Tournament")
+##    testLargeTournament()
+##    print ("Success!  Large Tournament concluded")
+##    print ("Attempting simultaneous Small & Large Tournaments")
+##    testDoubleTournament()
+##    print ("Success!  both Tournaments concluded")
 
 

@@ -34,7 +34,6 @@ CREATE TABLE Contestants (
 -- Create table Matches with 
 CREATE TABLE Matches (
     tourney_id integer REFERENCES Tourneys (id) ON DELETE CASCADE,
-    round integer NOT NULL DEFAULT 1,
     id_winner integer NULL DEFAULT NULL REFERENCES Players (id) ON DELETE RESTRICT,
     id_loser integer NULL DEFAULT NULL REFERENCES Players (id) ON DELETE RESTRICT,
     id_tie_a integer NULL DEFAULT NULL REFERENCES Players (id) ON DELETE RESTRICT,
@@ -42,6 +41,20 @@ CREATE TABLE Matches (
     CHECK ((id_winner != id_loser) OR (id_winner != id_loser) IS NULL),
     CHECK ((id_tie_a != id_tie_b) OR (id_tie_a != id_tie_b) IS NULL)
 );
+
+CREATE VIEW Past_Pairings AS
+    SELECT previous.tourney_id, previous.id_one, pa.name as name_one, 
+           previous.id_two, pb.name as name_two 
+    FROM (SELECT tourney_id, 
+          COALESCE(id_winner, id_tie_a) as id_one, 
+          COALESCE(id_loser, id_tie_b) as id_two FROM Matches) as previous 
+    JOIN Players AS pa ON previous.id_one = pa.id 
+    JOIN Players AS pb ON previous.id_two = pb.id;
+
+CREATE VIEW Past_Victors AS
+    Select tourney_id, id_winner, id_loser 
+    from matches where id_winner is not null and id_loser is not null;
+    
 
 -- 45678901234567890123456789012345678901234567890123456789012345678901234567890
 -- Create view Stats with
@@ -51,7 +64,7 @@ CREATE VIEW Standings AS
            win.wins, lose.loses, tie.ties
     FROM Contestants
     LEFT JOIN (SELECT Contestants.tourney_id, Contestants.player_id,
-               COUNT(Matches.round) as matches
+               COUNT(Matches.*) as matches
                FROM Contestants
                LEFT JOIN Matches 
                ON Contestants.tourney_id = Matches.tourney_id
@@ -103,3 +116,5 @@ CREATE VIEW Standings AS
 
 -- Tournament total stats
 -- SELECT tourney_id, tourney_name, CAST(SUM(matches)/2 as integer), SUM(wins), SUM(loses), SUM(ties) FROM standings GROUP BY tourney_id, tourney_name;
+
+-- SELECT COUNT(player_id), MAX(matches), MAX(wins) FROM Standings WHERE tourney_id = x;
