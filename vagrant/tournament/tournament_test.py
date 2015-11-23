@@ -153,7 +153,84 @@ def testSmallTournament():
         if not randomRound(tourney_id):
             break
 
+def testLargeTournament():
+    deleteMatches()
+    deletePlayers()
+    deleteTournaments()
+    registerPlayer("Andromeda", "Large Tournament")
+    tourney_id = getLatestTournament()
+    contestants = ["Antilia", "Aquarius", "Aries", "Auriga", "Bootes",
+                   "Caelum", "Camelopardalis", "Cancer", "Canis Major",
+                   "Canis Minor", "Capricornus", "Carina", "Cassiopeia",
+                   "Centaurus", "Cepheus", "Cetus", "Corona Australis",
+                   "Corona Borealis", "Corvus", "Crater", "Cygnus",
+                   "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus",
+                   "Fornax", "Gemini", "Hercules", "Horologium", "Hydra",
+                   "Indus", "Lacerta", "Leo", "Libra", "Lupus", "Lynx", "Lyra",
+                   "Mensa", "Monoceros", "Norma", "Octans", "Ophiuchus",
+                   "Orion", "Pegasus", "Perseus", "Pheonix", "Pisces", "Pyxis",
+                   "Sagittarius", "Scorpius", "Sculptor", "Serpens", "Taurus",
+                   "Telescopium", "Triangulum", "Tucana", "Ursa Major",
+                   "Ursa Minor", "Vela", "Virgo", "Volans", "Vulpecula"]
+    for name in contestants:
+        registerPlayer(name, tourney_id)
+    printTournamentStandings(tourney_id)
+    while True:
+        if not randomRound(tourney_id):
+            break
 
+def testDoubleTournament():
+    deleteMatches()
+    deletePlayers()
+    deleteTournaments()
+    registerPlayer("Andromeda", "Large Tournament")
+    tourney_id_l = getLatestTournament()
+    contestants = ["Antilia", "Aquarius", "Aries", "Auriga", "Bootes",
+                   "Caelum", "Camelopardalis", "Cancer", "Canis Major",
+                   "Canis Minor", "Capricornus", "Carina", "Cassiopeia",
+                   "Centaurus", "Cepheus", "Cetus", "Corona Australis",
+                   "Corona Borealis", "Corvus", "Crater", "Cygnus",
+                   "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus",
+                   "Fornax", "Gemini", "Hercules", "Horologium", "Hydra"]
+    for name in contestants:
+        registerPlayer(name, tourney_id_l)
+
+    registerPlayer("Alpha", "Small Tournament")
+    tourney_id_s = getLatestTournament()
+    contestants = ["Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta",
+                   "Theta", "Iota", "Kappa", "Lambda", "Mu", "Nu", "Xi",
+                   "Omicron", "Pi"]
+    for name in contestants:
+        registerPlayer(name, tourney_id_s)
+
+    contestants = ["Indus", "Lacerta", "Leo", "Libra", "Lupus", "Lynx", "Lyra",
+                   "Mensa", "Monoceros", "Norma", "Octans", "Ophiuchus",
+                   "Orion", "Pegasus", "Perseus", "Pheonix", "Pisces", "Pyxis",
+                   "Sagittarius", "Scorpius", "Sculptor", "Serpens", "Taurus",
+                   "Telescopium", "Triangulum", "Tucana", "Ursa Major",
+                   "Ursa Minor", "Vela", "Virgo", "Volans", "Vulpecula"]
+    for name in contestants:
+        registerPlayer(name, tourney_id_l)
+    printTournamentStandings(tourney_id_l)
+    printTournamentStandings(tourney_id_s)
+    for i in range(10):
+        if randomRound(tourney_id_l):
+            pass
+        if randomRound(tourney_id_s):
+            pass
+        print ("~Round~")
+        print (i)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_s)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_s)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_s)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_s)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_l)
+##    randomRound(tourney_id_l)
 
 def printTournamentStandings(tourney_id):
     standings = tournamentStandings(tourney_id, False)
@@ -165,6 +242,8 @@ def printTournamentStandings(tourney_id):
 
 def randomRound(tourney_id):
     pairings = swissPairings(tourney_id)
+    print("~PAIRS~")
+    print(pairings)
     if pairings == [None]:
         return False
     else:
@@ -181,24 +260,24 @@ def randomWinner(one, two):
         return [two, one]
 
 if __name__ == '__main__':
-    testDeleteMatches()
-    testDeletePlayers()
-    testDeleteTournaments()
-    testCount()
-    testRegister()
-    testRegisterCountDelete()
-    testStandingsBeforeMatches()
-    testReportMatches()
-    testPairings()
-    print ("Success!  All tests pass!")
-    print ("Attempting randomly generated Small Tournament")
-    testSmallTournament()
+##    testDeleteMatches()
+##    testDeletePlayers()
+##    testDeleteTournaments()
+##    testCount()
+##    testRegister()
+##    testRegisterCountDelete()
+##    testStandingsBeforeMatches()
+##    testReportMatches()
+##    testPairings()
+##    print ("Success!  All tests pass!")
+##    print ("Attempting randomly generated Small Tournament")
+##    testSmallTournament()
 ##    print ("Success!  Small Tournament concluded")
 ##    print ("Attempting randomly generated Large Tournament")
 ##    testLargeTournament()
 ##    print ("Success!  Large Tournament concluded")
-##    print ("Attempting simultaneous Small & Large Tournaments")
-##    testDoubleTournament()
-##    print ("Success!  both Tournaments concluded")
+    print ("Attempting simultaneous Small & Large Tournaments")
+    testDoubleTournament()
+    print ("Success!  both Tournaments concluded")
 
 

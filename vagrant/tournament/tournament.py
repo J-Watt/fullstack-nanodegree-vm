@@ -322,7 +322,6 @@ def swissPairings(tourney=None):
     cursor.execute(query, [query_add])
     past_pairings = set()
     past_pairings.update(cursor.fetchall())
-    print (past_pairings)
 
     standings = tournamentStandings(tourney_id, False)
     players = []
@@ -345,10 +344,10 @@ def swissPairings(tourney=None):
 
     tourney_db.commit()
     tourney_db.close()
-
+    player_ids = []
     if rounds_past < rounds_max:
-        win_num = win_max
-        player_ids, tiered_ids = [], []
+        win_num = int(win_max)
+        tiered_ids = []
         while win_num >= 0:
             for p in players:
                 if p['WIN'] == win_num:
@@ -357,15 +356,17 @@ def swissPairings(tourney=None):
                 player_ids.append(tiered_ids)
             tiered_ids = []
             win_num -= 1
-        print (player_ids)
         tier_max = len(player_ids) - 1
-        print (tier_max)
 
         infinite_loop = 0
         while True:
             pairings = []
             tier_level = 0
-            new_player_ids = player_ids
+            new_player_ids = [list(key) for key in player_ids]
+            print (new_player_ids)
+            print (player_ids)
+            print (id(player_ids))
+            print (id(new_player_ids))
             bye = None
 
             for tier in new_player_ids:
@@ -395,8 +396,7 @@ def swissPairings(tourney=None):
                     new_player_ids = [x for x in new_player_ids if x != []]
 
                 tier_level += 1
-            print (new_player_ids)
-
+            print (player_ids)
             for tier in new_player_ids:
                 while tier:
                     pair_a_i = choice(tier)
@@ -406,13 +406,8 @@ def swissPairings(tourney=None):
                     pair_b_n = [x['NAME'] for x in players if x['ID'] == pair_b_i]
                     tier.remove(pair_b_i)
                     pairings.append((pair_a_i, pair_a_n[0], pair_b_i, pair_b_n[0]),)
-                    print ('~~ Pairings ~~')
-                    print (pair_a_i)
-                    print (pair_a_n[0])
-                    print (pair_b_i)
-                    print (pair_b_n[0])
-                    print (tier)
-            print (pairings)
+                print (player_ids)
+
             if bye:
                 reportMatch(bye, None, tourney_id, False)
             # debug
@@ -423,9 +418,14 @@ def swissPairings(tourney=None):
                 break
             check_pairings = set()
             check_pairings.update(pairings)
+            print (new_player_ids)
+            print (player_ids)
+            print (pairings)
+            print (past_pairings)
+            print (check_pairings & past_pairings)
             if not check_pairings & past_pairings:
 ##            if [val for val in pairings if val in past_pairings]:
-                print ('No previous matches')
+                print ('No repeat previous matches')
                 break
         return pairings
 
@@ -437,7 +437,7 @@ def swissPairings(tourney=None):
                 first = first.format(player['ID'], player['NAME'])
 ##        results = "FIRST: {1}\nSECOND: {2}\nTHIRD: {3}"
 ##        results.format(first, second, third)
-        results = "\n\n ~~~ WINNER!! ~~~\n" + first
+        results = "\n\n ~~~ WINNER!! ~~~\n" + first + "\n\n"
         print (results)
         return [None]
 
