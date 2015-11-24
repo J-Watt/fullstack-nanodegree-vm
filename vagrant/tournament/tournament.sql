@@ -1,22 +1,26 @@
--- Table definitions for the tournament project.
---
--- Put your SQL 'create table' statements in this file; also 'create view'
--- statements if you choose to use it.
---
--- You can write comments in this file by starting them with two dashes, like
--- these lines here.
+-- ----------------------------------------------------------------------------
+-- 
+-- Name: tournament
+-- Purpose: Hosting multiple swiss style tournaments and showing results
+-- 
+-- Author: Jordan Alexander Watt
+-- 
+-- Modified: 24-11-2015
+-- Created: 13-11-2015
+-- 
+-- ----------------------------------------------------------------------------
 
 -- Create database named tournament and connect to it
 CREATE DATABASE tournament;
 \c tournament;
 
--- Create table Players with 
+-- Create table Players including automatic unique id keys
 CREATE TABLE Players (
     id serial PRIMARY KEY,
     name text
 );
 
--- Create table Tourneys with 
+-- Create table Tourneys with automatic unique id keys
 CREATE SEQUENCE tourneys_id_seq START 1001;
 CREATE TABLE Tourneys (
     id integer DEFAULT nextval('tourneys_id_seq') PRIMARY KEY,
@@ -24,14 +28,14 @@ CREATE TABLE Tourneys (
 );
 ALTER SEQUENCE tourneys_id_seq OWNED BY Tourneys.id;
 
--- Create table Contestants with 
+-- Create table Contestants referencing foreign id key in Players and Tourneys
 CREATE TABLE Contestants (
     tourney_id integer REFERENCES Tourneys (id) ON DELETE CASCADE,
     player_id integer REFERENCES Players (id) ON DELETE CASCADE,
     UNIQUE (tourney_id, player_id)
 );
 
--- Create table Matches with 
+-- Create table Matches referencing foreign id key in Players and Tourneys
 CREATE TABLE Matches (
     tourney_id integer REFERENCES Tourneys (id) ON DELETE CASCADE,
     id_winner integer NULL DEFAULT NULL REFERENCES Players (id) ON DELETE RESTRICT,
@@ -42,6 +46,7 @@ CREATE TABLE Matches (
     CHECK ((id_tie_a != id_tie_b) OR (id_tie_a != id_tie_b) IS NULL)
 );
 
+-- Create view Past_Pairings to view all previous matchups
 CREATE VIEW Past_Pairings AS
     SELECT previous.tourney_id, previous.id_one, pa.name as name_one, 
            previous.id_two, pb.name as name_two 
@@ -51,13 +56,12 @@ CREATE VIEW Past_Pairings AS
     JOIN Players AS pa ON previous.id_one = pa.id 
     JOIN Players AS pb ON previous.id_two = pb.id;
 
+-- Create view Past_Victors to view all previous matchup winners without ties
 CREATE VIEW Past_Victors AS
     Select tourney_id, id_winner, id_loser 
     from matches where id_winner is not null and id_loser is not null;
     
-
--- 45678901234567890123456789012345678901234567890123456789012345678901234567890
--- Create view Stats with
+-- Create view Standings to view player statistics from matchups
 CREATE VIEW Standings AS
     SELECT Contestants.tourney_id, Tourneys.name as tourney_name,
            Contestants.player_id, Players.name, matched.matches,
@@ -107,14 +111,3 @@ CREATE VIEW Standings AS
     JOIN Tourneys ON Contestants.tourney_id = Tourneys.id
     JOIN Players ON Contestants.player_id = Players.id
     ORDER BY Contestants.tourney_id, Contestants.player_id;
-
-
-
--- Player total stats
--- SELECT player_id, name, SUM(matches) as matches, SUM(wins) as wins, SUM(loses) as loses, SUM(ties) as ties FROM standings GROUP BY player_id, name ORDER BY player_id;
-
-
--- Tournament total stats
--- SELECT tourney_id, tourney_name, CAST(SUM(matches)/2 as integer), SUM(wins), SUM(loses), SUM(ties) FROM standings GROUP BY tourney_id, tourney_name;
-
--- SELECT COUNT(player_id), MAX(matches), MAX(wins) FROM Standings WHERE tourney_id = x;
