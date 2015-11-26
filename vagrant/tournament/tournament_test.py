@@ -183,6 +183,8 @@ def testSmallTournament(ties=False):
         if not randomRound(tourney_id, ties):
             break
 
+    printTournamentStandings(tourney_id)
+
 
 def testLargeTournament(ties=False):
     """Simulates a 64 player tournament to test functionality
@@ -220,6 +222,8 @@ def testLargeTournament(ties=False):
     while True:
         if not randomRound(tourney_id, ties):
             break
+
+    printTournamentStandings(tourney_id)
 
 
 def testDoubleTournament(ties=False):
@@ -284,6 +288,9 @@ def testDoubleTournament(ties=False):
         if randomRound(tourney_id_s, ties):
             pass
 
+    printTournamentStandings(tourney_id_l)
+    printTournamentStandings(tourney_id_s)
+
 
 def printTournamentStandings(tourney_id):
     """Prints out tournamentStandings results in a clear format. This
@@ -326,7 +333,9 @@ def randomRound(tourney_id, ties=False):
 
             # reportMatch will determine what to do if there is a tied match
             reportMatch(winner, loser, tourney_id, tie)
-        printTournamentStandings(tourney_id)
+
+        # UNCOMMENT THIS NEXT LINE TO PRINT THE TOURNAMENT ROUNDS LIVE
+##        printTournamentStandings(tourney_id)
         return True
 
 
@@ -372,19 +381,20 @@ if __name__ == '__main__':
     testPairings()
     print ("Success!  All tests pass!")
 
-    print ("Attempting randomly generated Small Tournament")
+    print ("\nAttempting randomly generated Small Tournament")
     testSmallTournament()
     print ("Success!  Small Tournament concluded")
 
-    print ("Attempting randomly generated Large Tournament")
+    print ("\nAttempting randomly generated Large Tournament")
     testLargeTournament()
     print ("Success!  Large Tournament concluded")
 
-    print ("Attempting Small Tournament with random ties")
+    print ("\nAttempting Small Tournament with random ties")
     testSmallTournament(True)
     print ("Success!  Small Tournament concluded")
 
-    print ("Attempting Small & Large Tournaments with random ties")
+    print ("\nAttempting Small & Large Tournaments with random ties")
     testDoubleTournament(True)
     print ("Success!  both Tournaments concluded")
-    print ("Success!  All tournaments successfully concluded!")
+    print ("\nSuccess!  All tournaments successfully concluded!")
+    print ("\nThe program has completed and will now end.")

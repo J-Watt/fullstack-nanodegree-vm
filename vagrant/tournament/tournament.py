@@ -515,6 +515,6 @@ def swissPairings(tourney=None):
         for player in players:
             if player['WIN'] == win_max:
                 first = first.format(player['ID'], player['NAME'])
-        results = "\n\n ~~~ WINNER!! ~~~\n" + first + "\n\n"
+        results = "\n\n ~~~ WINNER!! ~~~\n" + first
         print (results)
         return [None]

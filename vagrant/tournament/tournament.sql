@@ -55,11 +55,6 @@ CREATE VIEW Past_Pairings AS
           COALESCE(id_loser, id_tie_b) as id_two FROM Matches) as previous 
     JOIN Players AS pa ON previous.id_one = pa.id 
     JOIN Players AS pb ON previous.id_two = pb.id;
-
--- Create view Past_Victors to view all previous matchup winners without ties
-CREATE VIEW Past_Victors AS
-    Select tourney_id, id_winner, id_loser 
-    from matches where id_winner is not null and id_loser is not null;
     
 -- Create view Standings to view player statistics from matchups
 CREATE VIEW Standings AS
