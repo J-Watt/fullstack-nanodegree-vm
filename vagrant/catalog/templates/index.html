@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <meta charset="">
+    <meta name="viewport" content="width=device-width">
+    <title>Catalog</title>
+</head>
+    
+<body>
+
+    <h1>Catalog</h1>
+    
+    <a href='{{url_for("newItem")}}'>New Item</a>
+    </br></br>
+    
+    {% for i in categories %}
+    
+        <a href='{{url_for("category", category_id = i.id)}}'>{{i.name}}</a>
+        </br>
+    
+    {% endfor %}
+</body>
+
+</html>
