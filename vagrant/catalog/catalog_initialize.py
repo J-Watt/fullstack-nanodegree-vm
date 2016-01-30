@@ -18,10 +18,6 @@ lacrosse = Category(name = "Lacrosse")
 baseball = Category(name = "Baseball")
 tennis = Category(name = "Tennis")
 
-
-##session.add_all([ultimate, hockey, basketball, snowboarding, soccer,
-##                 football, golf, lacrosse, baseball, tennis])
-
 session.add_all([
     Item(name = "Disc", description = "Official 175g game disc!",
          category = ultimate),

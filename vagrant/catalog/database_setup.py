@@ -21,8 +21,26 @@ class Item(Base):
     name = Column(String(50), nullable = False)
     image = Column(String(250))
     description = Column(String(250))
+##    user = Column(Integer)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
+
+    @property
+    def serialize(self):
+        #Returns object data in easily serializable format
+        return {
+            'id' : self.id,
+            'name' : self.name,
+            'image' : self.image,
+            'description' : self.description
+        }
+
+class User(Base):
+
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(50), nullable = False)
 
 engine = create_engine('sqlite:///catalog.db')
 

@@ -1,0 +1,8 @@
+h1, h2, h3, h4 { color: #333333; }
+p { color: #333333; }
+a { 
+    text-decoration: none;
+    color: #000BBB;
+    font-size: .75em;
+}
+.flash { background: #cee5F5; }

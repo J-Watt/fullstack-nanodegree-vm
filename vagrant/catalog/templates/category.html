@@ -4,6 +4,7 @@
 <head>
     <meta charset="">
     <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <title>Catalog</title>
 </head>
     
@@ -11,6 +12,18 @@
 
     <h1>{{ categories.name }}</h1>
     
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+            <ul>
+                {% for message in messages %}
+                    <li class="flash"> <strong> {{ message }} </strong></li>
+                {% endfor %}
+            </ul>
+    
+        {% endif %}
+    {% endwith %}
+
     {% for i in items %}
     
         <a href='{{url_for("item", category_id = categories.id, item_id = i.id)}}'>{{i.name}}</a>
