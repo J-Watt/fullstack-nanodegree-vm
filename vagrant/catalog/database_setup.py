@@ -13,6 +13,15 @@ class Category(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String(250), nullable = False)
 
+class User(Base):
+
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(250), nullable = False)
+    email = Column(String(250), nullable = False)
+    picture = Column(String(250))
+
 class Item(Base):
 
     __tablename__ = 'item'
@@ -21,7 +30,8 @@ class Item(Base):
     name = Column(String(50), nullable = False)
     image = Column(String(250))
     description = Column(String(250))
-##    user = Column(Integer)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
 
@@ -34,13 +44,6 @@ class Item(Base):
             'image' : self.image,
             'description' : self.description
         }
-
-class User(Base):
-
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key = True)
-    name = Column(String(50), nullable = False)
 
 engine = create_engine('sqlite:///catalog.db')
 

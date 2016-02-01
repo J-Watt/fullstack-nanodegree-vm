@@ -2,7 +2,7 @@
 <html>
     
 <head>
-    <meta charset="">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <title>Catalog</title>
@@ -24,6 +24,9 @@
         {% endif %}
     {% endwith %}
 
+    <a href='{{url_for("newItem")}}'>New Item</a>
+    </br></br>
+    
     {% for i in items %}
     
         <a href='{{url_for("item", category_id = categories.id, item_id = i.id)}}'>{{i.name}}</a>
