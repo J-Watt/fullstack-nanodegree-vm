@@ -3,10 +3,11 @@
 {% block content %}
     <div class="col-xs-10 col-md-10" id="content">
             <h1>{{ session['username'] }}</h1>
-
+            <ul>
             {% for i in dbinfo['items'] %}
     
-                <a href='{{url_for("item", category_name = i.category.name, item_name = i.name, item_id = i.id)}}'>{{i.name}}</a>
-            </br>
+                <li><a href='{{url_for("item", category_name = i.category.name, item_name = i.name, item_id = i.id)}}'>{{i.name}}</a></li>
+
             {% endfor %}
+            </ul>
 {% endblock content %}

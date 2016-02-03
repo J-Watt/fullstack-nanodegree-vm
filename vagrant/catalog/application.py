@@ -7,8 +7,7 @@ from database_setup import Base, Category, Item, User
 
 import random, string
 
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 import httplib2, json, requests
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
@@ -22,7 +21,8 @@ session = DBSession()
 @app.route('/catalog/')
 def index():
     categories = session.query(Category)
-    dbinfo = {"categories": categories, "current": ""}
+    items = session.query(Item).order_by(Item.id.desc()).limit(10)
+    dbinfo = {"categories": categories, "items": items, "current": ""}
     return render_template('index.html', dbinfo=dbinfo,)
 
 @app.route('/catalog/<category_name>/')
@@ -53,7 +53,7 @@ def newItem():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newitem = Item(name = request.form['name'], description = request.form['description'], category_id = request.form['category'], user_id = login_session['user_id'])
+        newitem = Item(name = request.form['name'], description = request.form['description'], image = request.form['image'], category_id = request.form['category'], user_id = login_session['user_id'])
         session.add(newitem)
         session.commit()
         current = session.query(Item).filter(Item.name == request.form['name'], Item.user_id == login_session['user_id']).first()
@@ -76,6 +76,8 @@ def editItem(category_name, item_name, item_id):
             edititem.name = request.form['name']
         if request.form['description']:
             edititem.description = request.form['description']
+        if request.form['image']:
+            edititem.image = request.form['image']
         if request.form['category_id']:
             edititem.category_id = request.form['category_id']
         session.add(edititem)
@@ -330,6 +332,6 @@ def getUserInfo(user_id):
     return user
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
+    app.secret_key = '\xf9;\x14\x13\xad\xda\xa8bk\x94\xdaa'
     app.debug = True
     app.run(host = '0.0.0.0', port = 8000)

@@ -12,6 +12,9 @@
         <p>Description:</p>
             <input type="text" size="30" name="description">
         
+        <p>Image URL:</p>
+            <input type="text" size="30" name="image">
+        
         <p>Category:</p>
             <select name="category">
                 {% for i in dbinfo['categories'] %}
@@ -21,9 +24,11 @@
                 {% endfor %}
             </select>
         
-        <input type="submit" value="Create">
+        <input class="item-btn" type="submit" value="Create">
     
+        <a class="item-btn" href='{{url_for("index")}}'>Cancel</a>
+        
     </form>
 
-    <a href='{{url_for("index")}}'>Cancel</a>
+    
 {% endblock content %}

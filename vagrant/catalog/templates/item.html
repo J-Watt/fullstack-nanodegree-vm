@@ -2,15 +2,17 @@
 {% block title %}Item{% endblock %}
 {% block content %}
     {{ super() }}
-            <h1>{{ dbinfo['current'].name }}</h1>
-            </br>
-            {{ dbinfo['current'].description }}
-            </br>
-            {{ dbinfo['current'].image }}
-            </br>
-            {{ dbinfo['current'].user.name }}
-            </br>
-            </br> 
-            <a href="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Edit</a>
-            <a href="{{url_for('deleteItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Delete</a>
+    <h1>{{ dbinfo['current'].name }}</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-8 col-md-8">
+            <p>{{ dbinfo['current'].description }}</p>
+            <p class="creator">{{ dbinfo['current'].user.name }}</p>
+            
+            <a class="item-btn" href="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Edit</a>
+            <a class="item-btn" href="{{url_for('deleteItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Delete</a>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <img src="{{ dbinfo['current'].image }}" alt="{{ dbinfo['current'].name }} Image">
+            </div>
 {% endblock content %}

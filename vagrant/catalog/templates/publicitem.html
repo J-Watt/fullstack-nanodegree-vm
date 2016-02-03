@@ -3,8 +3,6 @@
 {% block content %}
     {{ super() }}
             <h1>{{ dbinfo['current'].name }}</h1>
-            </br>
-            {{ dbinfo['current'].description }}
-            </br>
-            {{ dbinfo['current'].image }}
+            <p>{{ dbinfo['current'].description }}</p>
+            <img src="{{ dbinfo['current'].image }}" alt="{{ dbinfo['current'].name }} Image">
 {% endblock content %}

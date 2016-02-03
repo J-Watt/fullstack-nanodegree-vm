@@ -1,10 +1,127 @@
-h1, h2, h3, h4 { color: #333333; }
-p { color: #333333; }
-a { 
-    text-decoration: none;
-    color: #000BBB;
-    font-size: .75em;
+/* 
+#89bdd3
+#9ad3de
+#c9c9c9
+#e3e3e3
+
+*/
+body {
+    background-color: #f2f2f2;
 }
+
+h1, h2, h3, h4 { 
+    color: #404040; 
+}
+
+p { 
+    color: #404040;
+    margin: 15px 0 0 0;
+}
+
+a:link,
+a:visited { 
+    text-decoration: none;
+    font-weight: bold;
+    color: #3e88a7;
+}
+
+a:hover { 
+    text-decoration: none;
+    color: #224c5d;
+}
+
+#content select {
+    display: block;
+    margin-bottom: 15px;
+}
+
+#content .item-btn:link,
+#content .item-btn:visited {
+    background-color: #d9d9d9;
+    padding: 14px 25px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+#content .item-btn:hover {
+    background-color: #c9c9c9;
+}
+
+#content input.item-btn {
+    background-color: #d9d9d9;
+    padding: 14px 25px;
+    border-radius: 5px;
+    border: none;
+    display: inline-block;
+    font-weight: bold;
+    color: #3e88a7;
+}
+
+#content input.item-btn:hover {
+    color: #224c5d;
+    background-color: #c9c9c9;
+}
+
+#content img {
+    float: right;
+    margin: 0 0 0 auto;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #89bdd3;
+}
+
+.navbar .navbar-nav li a,
+.navbar .navbar-header .navbar-brand {
+    background-color: #9ad3de;
+    border-right: solid 1px #89bdd3;
+    color: #404040;
+}
+
+.navbar .navbar-nav li a:hover,
+.navbar .navbar-header .navbar-brand:hover {
+    background-color: #8ccdd9;
+}
+
+.navbar-fixed-bottom .container a {
+    color: #404040;
+}
+
+#catbar,
+#itembar {
+    border-right: solid 1px #d9d9d9;
+}
+
+#catbar li a,
+#itembar li a,
+#content li a {
+    display: block;
+    max-width: 240px;
+}
+
+#catbar li a:hover,
+#itembar li a:hover,
+#content li a:hover {
+    background-color: #e3e3e3;
+    border-radius: 5px;
+}
+
+.active a:link,
+.active a:visited,
+.active a:hover {
+    color: #224c5d;
+    border-left: solid 2px #d9d9d9;
+}
+
 .flash-message { background: #cee5F5; }
 .flash {
 
