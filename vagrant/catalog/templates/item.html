@@ -1,37 +1,16 @@
-<!DOCTYPE html>
-<html>
-    
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Catalog</title>
-</head>
-    
-<body>
-
-    <h1>{{ items.name }}</h1>
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-
-            <ul>
-                {% for message in messages %}
-                    <li class="flash"> <strong> {{ message }} </strong></li>
-                {% endfor %}
-            </ul>
-    
-        {% endif %}
-    {% endwith %}
-    
-    </br>
-    {{items.description}}
-    </br>
-    </br> 
-    <a href='{{url_for("editItem", category_id = categories.id, item_id = items.id)}}'>Edit</a>
-    <a href='{{url_for("deleteItem", item_id = items.id)}}'>Delete</a>
-
-
-</body>
-
-</html>
+{% extends "main.html" %}
+{% block title %}Item{% endblock %}
+{% block content %}
+    {{ super() }}
+            <h1>{{ dbinfo['current'].name }}</h1>
+            </br>
+            {{ dbinfo['current'].description }}
+            </br>
+            {{ dbinfo['current'].image }}
+            </br>
+            {{ dbinfo['current'].user.name }}
+            </br>
+            </br> 
+            <a href="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Edit</a>
+            <a href="{{url_for('deleteItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Delete</a>
+{% endblock content %}

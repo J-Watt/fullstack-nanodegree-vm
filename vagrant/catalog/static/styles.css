@@ -5,4 +5,17 @@ a {
     color: #000BBB;
     font-size: .75em;
 }
-.flash { background: #cee5F5; }
+.flash-message { background: #cee5F5; }
+.flash {
+
+}
+
+#gsigninButton {
+    display: inline-block;
+}
+
+#fbsigninButton {
+    background-color: transparent;
+    border: none;
+    display: inline-block;
+}

@@ -12,7 +12,7 @@
     
 <body>
 
-    <div id="signinButton">
+    <div id="gsigninButton">
         <span class="g-signin"
               data-scope="openid email"
               data-clientid="633159557335-sfdb9uefnru0k6j87h701edm0pjhhopi.apps.googleusercontent.com"
@@ -23,13 +23,20 @@
               data-approvalprompt="force">
         </span>
     </div>
+
+    <button id="fbsigninButton">
+         <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();"><a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+        </fb:login-button>
+    </button>
+
     <div id="result"></div>
     
     <script>
         function signInCallback(authResult) {
             if (authResult['code']) {
                 //Hide the sign-in button now that the user is authorized
-                $('#signinButton').attr('style', 'display: none');
+                $('#gsigninButton').attr('style', 'display: none');
+                $('#fbsigninButton').attr('style', 'display: none');
                 //Sends the one-time code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main catalog page
                 $.ajax({
                     type: 'POST',
@@ -83,6 +90,9 @@
             console.log(access_token)
             console.log('Welcome!  Fetching your information.... ');
             FB.api('/me', function(response) {
+                //Hide the sign-in button now that the user is authorized
+                $('#gsigninButton').attr('style', 'display: none');
+                $('#fbsigninButton').attr('style', 'display: none');
                 console.log('Successful login for: ' + response.name);
                 $.ajax({
                     type: 'POST',
@@ -107,11 +117,6 @@
             });
         }
     </script>
-
-    <button>
-         <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();"><a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-        </fb:login-button>
-    </button>
     
 </body>
 

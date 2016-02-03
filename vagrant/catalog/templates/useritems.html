@@ -1,8 +1,8 @@
 {% extends "main.html" %}
-{% block title %}Category{% endblock %}
+{% block title %}User{% endblock %}
 {% block content %}
     <div class="col-xs-10 col-md-10" id="content">
-            <h1>{{ dbinfo['current'] }}</h1>
+            <h1>{{ session['username'] }}</h1>
 
             {% for i in dbinfo['items'] %}
     
