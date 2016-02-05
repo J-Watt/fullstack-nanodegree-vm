@@ -2,7 +2,20 @@
 {% block title %}Item{% endblock %}
 {% block content %}
     {{ super() }}
-            <h1>{{ dbinfo['current'].name }}</h1>
-            <p>{{ dbinfo['current'].description }}</p>
-            <img src="{{ dbinfo['current'].image }}" alt="{{ dbinfo['current'].name }} Image">
+    <h3>{{ dbinfo['current'].name }}</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-8 col-md-8">
+                <p>{{ dbinfo['current'].description }}</p>
+                {% if 'username' in session %}
+                    <p class="creator">Added by {{ dbinfo['current'].user.name }}</p>
+                {% endif %}
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="portrait">
+                    <img src="{{ dbinfo['current'].image }}" alt="{{ dbinfo['current'].name }} Image">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}

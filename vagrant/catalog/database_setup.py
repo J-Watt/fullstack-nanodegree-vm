@@ -1,5 +1,5 @@
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -30,6 +30,7 @@ class Item(Base):
     name = Column(String(50), nullable = False)
     image = Column(String(250))
     description = Column(String(250))
+    date = Column(DateTime(True), server_default = text('CURRENT_TIMESTAMP'))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     category_id = Column(Integer, ForeignKey('category.id'))

@@ -5,10 +5,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
 
-import random, string
-
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
-import httplib2, json, requests
+import httplib2, json, requests, random, string
+from datetime import datetime
+
+from urlparse import urljoin
+from werkzeug.contrib.atom import AtomFeed
+
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
@@ -300,18 +303,39 @@ def disconnect():
         flash("You were not logged in")
         return redirect(url_for('index'))
 
+#API Endpoint (GET Request)
+@app.route('/catalog/JSON')
+def catalogJSON():
+    items = session.query(Item).all()
+    return jsonify(Items = [i.serialize for i in items])
+
 #API Endpoint (GET Request) for categories
-@app.route('/catalog/<int:category_id>/JSON/')
+@app.route('/catalog/<int:category_id>/JSON')
 def catalogCategoryJSON(category_id):
     categories = session.query(Category).filter_by(id = category_id).one()
     items = session.query(Item).filter_by(category_id = category_id)
     return jsonify(Items = [i.serialize for i in items])
 
 #API Endpoint (GET Request) for items
-@app.route('/catalog/<int:category_id>/<int:item_id>/JSON/')
+@app.route('/catalog/<int:category_id>/<int:item_id>/JSON')
 def catalogItemJSON(category_id, item_id):
     items = session.query(Item).filter_by(id = item_id).one()
     return jsonify(Items = items.serialize)
+
+#API Endpoint
+@app.route('/catalog/ATOM')
+def catalog_feed():
+    feed = AtomFeed('Recent Items',
+                    feed_url = request.url, url = request.url_root)
+    items = session.query(Item).order_by(Item.id.desc()).limit(10).all()
+    for i in items:
+        feed.add(i.name, unicode(i.description), content_type = 'html',
+                 author = i.user.name, url = make_external(url_for("item", category_name = i.category.name, item_name = i.name, item_id = i.id)),
+                 updated = i.date)
+    return feed.get_response()
+
+def make_external(url):
+    return urljoin(request.url_root, url)
 
 def createUser(login_session):
     newUser = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
