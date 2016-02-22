@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block title %}Item{% endblock %}
+{% block content %}
+    {{ super() }}
+    <h3>{{ dbinfo['current'].name }}</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-8 col-md-8">
+                <p>{{ dbinfo['current'].description }}</p>
+                <p class="creator">Added by {{ dbinfo['current'].user.name }}</p>
+
+                <a class="item-btn" href="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Edit</a>
+                <a class="item-btn" href="{{url_for('deleteItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}">Delete</a>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <div class="portrait">
+                <img src="{{ dbinfo['current'].image }}" alt="{{ dbinfo['current'].name }} Image">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

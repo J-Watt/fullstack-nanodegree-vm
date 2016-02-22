@@ -1,0 +1,14 @@
+<h3>{{ dbinfo['current'].category.name }}</h3>
+<ul>
+{% for i in dbinfo['items'] %}
+    {% if i.id == dbinfo['current'].id %}
+        <li class="active">
+            <a href='#'>{{i.name}}</a>
+        </li>
+    {% else %}
+        <li>
+            <a href='{{url_for("item", category_name = i.category.name, item_name = i.name, item_id = i.id)}}'>{{i.name}}</a>
+        </li>
+    {% endif %}
+{% endfor %}
+</ul>

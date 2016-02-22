@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
+    <div class="col-xs-6 col-sm-9 col-md-10" id="content">
+        <h3>New Additions</h3>
+        <ul>
+        {% for i in dbinfo['items'] %}
+    
+            <li><a href='{{url_for("item", category_name = i.category.name, item_name = i.name, item_id = i.id)}}'>{{i.name}}</a></li>
+                
+        {% endfor %}
+        </ul>
+{% endblock content %}
