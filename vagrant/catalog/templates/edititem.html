@@ -2,23 +2,23 @@
 {% block title %}Item{% endblock %}
 {% block content %}
     {{ super() }}
-            <h3>{{ dbinfo['current'].name }}</h3>
+    <h3>{{ dbinfo['current'].name }}</h3>
 
-            <form action="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}" method="post">
+    <form action="{{url_for('editItem', category_name = dbinfo['current'].category.name, item_name = dbinfo['current'].name, item_id = dbinfo['current'].id)}}" method="post">
                 
         <p>Name:</p>
             <input type="text" size="30" name="name" placeholder="{{dbinfo['current'].name}}">
-                
+
         <p>Description:</p>
             <input type="text" size="30" name="description" placeholder="{{dbinfo['current'].description}}">
-                
+
         <p>Image URL:</p>
             <input type="text" size="30" name="image" placeholder="{{dbinfo['current'].image}}">
-                
+
         <p>Category:</p>
             <select name="category_id">
                 {% for i in dbinfo['categories'] %}
-                
+
                     {% if i.id == dbinfo['current'].category_id %}
                         <option value="{{i.id}}" selected="selected">{{i.name}}</option>
                     {% else %}
@@ -26,11 +26,10 @@
                     {% endif %}
                 {% endfor %}
             </select>
-        
+
         <input class="item-btn" type="submit" value="Edit">
-    
+
         <a class="item-btn" href='{{url_for("item", category_name = dbinfo["current"].category.name, item_name = dbinfo["current"].name, item_id = dbinfo["current"].id)}}'>Cancel</a>    
             
     </form>
-    
 {% endblock content %}

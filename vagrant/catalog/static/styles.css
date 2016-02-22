@@ -1,10 +1,3 @@
-/* 
-#89bdd3
-#9ad3de
-#c9c9c9
-#e3e3e3
-
-*/
 html,
 body {
     height: 100%;
@@ -34,6 +27,15 @@ p {
     margin: 15px 0 0 0;
 }
 
+li {
+    list-style: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
 a:link,
 a:visited { 
     text-decoration: none;
@@ -44,6 +46,67 @@ a:visited {
 a:hover { 
     text-decoration: none;
     color: #224c5d;
+}
+
+.navbar {
+    background-color: #89bdd3;
+}
+
+.navbar .navbar-nav li a,
+.navbar .navbar-header .navbar-brand {
+    background-color: #9ad3de;
+    border-right: solid 1px #89bdd3;
+    color: #404040;
+}
+
+.navbar .navbar-nav li a:hover,
+.navbar .navbar-header .navbar-brand:hover {
+    background-color: #8ccdd9;
+}
+
+.flash {
+    position: absolute;
+    top: 75px;
+    right: 10px;
+}
+
+.flash .flash-message { 
+    background: #cee5F5;
+    padding: 5px 25px 5px 25px;
+    border: solid 2px #d9d9d9;
+}
+
+.active a:link,
+.active a:visited,
+.active a:hover {
+    color: #224c5d;
+    border-left: solid 2px #d9d9d9;
+}
+
+#catbar,
+#itembar {
+    border-right: solid 1px #d9d9d9;
+    padding-bottom: 120px;
+    min-width: 100px;
+}
+
+#catbar li a,
+#itembar li a,
+#content li a {
+    display: block;
+    max-width: 240px;
+    padding: 5px 0 5px 5px;
+}
+
+#catbar li a:hover,
+#itembar li a:hover,
+#content li a:hover {
+    background-color: #e3e3e3;
+    border-radius: 5px;
+}
+
+#content {
+    min-width: 100px;
 }
 
 #content select {
@@ -101,31 +164,6 @@ a:hover {
     height: auto;
 }
 
-li {
-    list-style: none;
-}
-
-ul {
-    margin: 0;
-    padding: 0;
-}
-
-.navbar {
-    background-color: #89bdd3;
-}
-
-.navbar .navbar-nav li a,
-.navbar .navbar-header .navbar-brand {
-    background-color: #9ad3de;
-    border-right: solid 1px #89bdd3;
-    color: #404040;
-}
-
-.navbar .navbar-nav li a:hover,
-.navbar .navbar-header .navbar-brand:hover {
-    background-color: #8ccdd9;
-}
-
 .footer {
     background-color: #89bdd3;
     padding: 20px 0 20px 0;
@@ -145,57 +183,16 @@ ul {
     color: #404040;
 }
 
-#catbar,
-#itembar {
-    border-right: solid 1px #d9d9d9;
-    padding-bottom: 120px;
-    min-width: 100px;
-}
-
-#content {
-    min-width: 100px;
-}
-
-#catbar li a,
-#itembar li a,
-#content li a {
-    display: block;
-    max-width: 240px;
-    padding: 5px 0 5px 5px;
-}
-
-#catbar li a:hover,
-#itembar li a:hover,
-#content li a:hover {
-    background-color: #e3e3e3;
-    border-radius: 5px;
-}
-
-.active a:link,
-.active a:visited,
-.active a:hover {
-    color: #224c5d;
-    border-left: solid 2px #d9d9d9;
-}
-
-.flash {
-    position: absolute;
-    top: 75px;
-    right: 10px;
-}
-
-.flash .flash-message { 
-    background: #cee5F5;
-    padding: 5px 25px 5px 25px;
-    border: solid 2px #d9d9d9;
-}
-
 #gsigninButton {
-    display: inline-block;
+    position: absolute;
+    top: 40px;
+    left: 25px;
 }
 
 #fbsigninButton {
     background-color: transparent;
     border: none;
-    display: inline-block;
+    position: absolute;
+    top: 44px;
+    left: 150px;
 }
