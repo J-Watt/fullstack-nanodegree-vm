@@ -19,6 +19,7 @@ Create a database by running included `database_setup.py`. Run
 What's Included
 ---------------
 
+```
 catalog
 |-- application.py
 |-- catalog_initialize.py
@@ -43,7 +44,7 @@ catalog
 |   |--  newitem.html
 |   |--  publicitem.html
 |   |--  useritems.html
-
+```
 
 
 
